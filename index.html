@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alfred — Gérez vos locations courte durée, sans effort</title>
+<script>try{var _al=localStorage.getItem('alfred-lang');if(_al==='en'||_al==='es'||_al==='fr')document.documentElement.lang=_al;}catch(e){}</script>
+<script defer src="assets/i18n.js"></script>
 <style>
 /* Satoshi — self-hosted */
 @font-face {
@@ -159,7 +161,43 @@ nav {
   transition: color 0.15s;
 }
 .nav-links a:hover { color: var(--black); }
-.nav-cta { display: flex; gap: 10px; }
+.nav-mid {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.lang-select {
+  font-family: 'Satoshi', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 9px 30px 9px 11px;
+  min-width: 0;
+  max-width: 118px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background-color: var(--white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  color: var(--black);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.lang-select:hover {
+  border-color: var(--grey-3);
+}
+.lang-select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-light);
+}
+.nav-menu-lang {
+  display: none;
+}
+.nav-cta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .nav-menu { display: none; position: relative; }
 .nav-menu-toggle {
   list-style: none;
@@ -392,8 +430,17 @@ nav {
 
 @media (max-width: 900px) {
   nav { padding: 0 20px; }
+  .nav-mid { display: none; }
   .nav-links,
   .nav-cta { display: none; }
+  .nav-menu-lang {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .nav-menu-lang .lang-select {
+    max-width: 140px;
+  }
   .nav-menu { display: block; position: static; }
   .nav-menu-panel {
     position: fixed;
@@ -1235,12 +1282,12 @@ body.load-screen-active {
 </head>
 <body class="load-screen-active">
 
-<div id="load-screen" class="load-screen" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Chargement de la page" aria-busy="true">
+<div id="load-screen" class="load-screen" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n="load_aria" data-i18n-attr="aria-label" aria-label="Chargement de la page" aria-busy="true">
   <div class="load-screen__inner">
     <svg class="load-screen__mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 39" aria-hidden="true" focusable="false">
       <path d="M21.58,14.01c-1.49-4.78,1.13-10.23,6.2-11.5-1.38-.89-2.81-.46-3.97.45-2.73,2.15-4.41,5.44-4.48,8.85s2.52,4.03,3.51,6.52c.71,1.79-.02,4.2-2,4.88-4.13,1.42-6.93.74-10.94,1.03-1.51.11-4.11.57-4.71-.71-.24-.51,0-.95.16-1.43l1.26-3.91.82-2.45.65-1.81c.16-.45.31-.91.51-1.39,1.51-3.75,2.92-7.56,4.42-11.26.12-.29.43-.48.71-.47s.59.34.5.73c-.63,2.73-1.33,4.7-2.34,7.28l-1.58,4.06c-1.23,3.16-2.32,6.31-3.52,9.47,3.8-.87,6.76-.4,10.67-.16l2.46-.56c.65-.15,1.04-.7,1.14-1.36.4-2.57-3.24-2.54-3.88-7.01-.25-1.72-.08-3.37.47-5.04.2-.61.33-1.14.63-1.75,1.17-2.47,3.21-4.57,5.62-5.84,1.85-.97,3.88-.81,5.59.2,2.78,1.65,4.61,4.46,5.18,7.59s-.34,6.16-2.81,8.08c-.05,1.94-.08,3.78-.24,5.65s-.42,3.75-.53,5.65c-.09,1.49.24,8.5-1.41,8.83-.23.05-.56-.15-.77-.44-1.74-2.42-3.49-4.85-5.68-6.88-1.91-1.77-4.68-2.23-6.96-.97-1.39.76-1.73,2.59-2.6,2.64-.3.02-.71-.15-.86-.39-.77-1.24-2.28-3.95-3.81-3.57-1.11.28-1.93,1.08-2.65,1.91-1.57,1.8-2.54,3.95-3.38,6.14-.34.89-1.3,3.99-2.59,3.5-.87-.34.21-2.89.42-3.46,1.23-3.42,3.22-7.87,6.6-9.58,2.92-1.49,4.96.67,6.34,3,1.46-2.34,4.19-3.54,6.93-3.05,3.61.64,6.57,4.21,8.4,7.42l.09-3.55c.07-2.9-.1-5.75.02-8.61l.11-2.76c-3.49,1.54-6.67-.86-7.65-4ZM29.45,15.39c.19-2.86.92-7.54.15-10.04-.22-.71-.81-1.04-1.53-.91-2.47.45-4.39,2.56-4.72,4.99-.25,1.78-.08,3.69.92,5.18.59.88,1.41,1.48,2.39,1.63s2.06-.19,2.81-.85ZM31.91,12.57c.49-1.18.66-2.56.28-3.83l-.28,3.83Z"/>
     </svg>
-    <p class="load-screen__quote">«&nbsp;Un instant, je vous prie…&nbsp;»</p>
+    <p class="load-screen__quote" data-i18n="load_quote" data-i18n-html="true">«&nbsp;Un instant, je vous prie…&nbsp;»</p>
     <div class="load-screen__bar-row">
       <div class="load-screen__bar-wrap">
         <div class="load-screen__bar" id="load-screen-bar"></div>
@@ -1255,30 +1302,44 @@ body.load-screen-active {
   <a href="#" class="logo">
     <img class="logo-img" src="assets/logo.svg" alt="Alfred" width="105" height="39" decoding="async">
   </a>
-  <ul class="nav-links">
-    <li><a href="#features">Fonctionnalités</a></li>
-    <li><a href="#how">Comment ça marche</a></li>
-    <li><a href="#pricing">Tarifs</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
+  <div class="nav-mid">
+    <ul class="nav-links">
+      <li><a href="#features" data-i18n="nav_features">Fonctionnalités</a></li>
+      <li><a href="#how" data-i18n="nav_how">Comment ça marche</a></li>
+      <li><a href="#pricing" data-i18n="nav_pricing">Tarifs</a></li>
+      <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
+    </ul>
+  </div>
   <div class="nav-cta">
-    <button type="button" class="btn-ghost">Se connecter</button>
-    <button type="button" class="btn-primary">Essai gratuit</button>
+    <button type="button" class="btn-ghost" data-i18n="nav_login">Se connecter</button>
+    <button type="button" class="btn-primary" data-i18n="nav_trial">Essai gratuit</button>
+    <select class="lang-select" id="lang-select-main" data-i18n="lang_group_aria" data-i18n-attr="aria-label" aria-label="Langue du site">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+    </select>
   </div>
   <details class="nav-menu">
-    <summary class="nav-menu-toggle" aria-label="Ouvrir le menu">
+    <summary class="nav-menu-toggle" data-i18n="nav_open_menu" data-i18n-attr="aria-label" aria-label="Ouvrir le menu">
       <span class="nav-menu-icon" aria-hidden="true"></span>
     </summary>
     <div class="nav-menu-panel">
+      <div class="nav-menu-lang">
+        <select class="lang-select" id="lang-select-panel" data-i18n="lang_group_aria" data-i18n-attr="aria-label" aria-label="Langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
       <ul class="nav-links-m">
-        <li><a href="#features">Fonctionnalités</a></li>
-        <li><a href="#how">Comment ça marche</a></li>
-        <li><a href="#pricing">Tarifs</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#features" data-i18n="nav_features">Fonctionnalités</a></li>
+        <li><a href="#how" data-i18n="nav_how">Comment ça marche</a></li>
+        <li><a href="#pricing" data-i18n="nav_pricing">Tarifs</a></li>
+        <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
       </ul>
       <div class="nav-menu-cta">
-        <button type="button" class="btn-ghost">Se connecter</button>
-        <button type="button" class="btn-primary">Essai gratuit</button>
+        <button type="button" class="btn-ghost" data-i18n="nav_login">Se connecter</button>
+        <button type="button" class="btn-primary" data-i18n="nav_trial">Essai gratuit</button>
       </div>
     </div>
   </details>
@@ -1297,66 +1358,66 @@ body.load-screen-active {
             <span class="hero-av"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&amp;h=120&amp;fit=crop&amp;crop=faces&amp;q=80" alt="" width="40" height="40" loading="eager" decoding="async"></span>
             <span class="hero-av"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&amp;h=120&amp;fit=crop&amp;crop=faces&amp;q=80" alt="" width="40" height="40" loading="eager" decoding="async"></span>
           </div>
-          <span class="hero-trust-txt">Plébiscité par 1&nbsp;200+ gestionnaires</span>
+          <span class="hero-trust-txt" data-i18n="hero_trust">Plébiscité par 1&nbsp;200+ gestionnaires</span>
         </div>
-        <h1 class="a0 a2">Gérez vos locations courte durée.<br><span class="hi">Sans friction.</span></h1>
-        <p class="hero-lead a0 a3">Réservations, ménages, alertes et messages — centralisés en un seul tableau de bord. Moins de chaos, plus de revenus.</p>
-        <button type="button" class="btn-hero-pill a0 a4">Commencer gratuitement</button>
+        <h1 class="a0 a2"><span data-i18n="hero_title_1">Gérez vos locations courte durée.</span><br><span class="hi" data-i18n="hero_title_2">Sans friction.</span></h1>
+        <p class="hero-lead a0 a3" data-i18n="hero_lead">Réservations, ménages, alertes et messages — centralisés en un seul tableau de bord. Moins de chaos, plus de revenus.</p>
+        <button type="button" class="btn-hero-pill a0 a4" data-i18n="hero_cta">Commencer gratuitement</button>
       </div>
       <div class="hero-col-visual a0 a5">
         <div class="hero-visual-frame">
-          <img src="assets/hero-reference.png" width="520" height="520" alt="Ambiance urbaine — illustration Alfred" loading="eager" decoding="async">
+          <img src="assets/hero-reference.png" width="520" height="520" alt="Ambiance urbaine — illustration Alfred" data-i18n="hero_img_alt" data-i18n-attr="alt" loading="eager" decoding="async">
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="feedback-strip" id="avis" aria-label="Témoignages clients">
+<section class="feedback-strip" id="avis" data-i18n="feedback_aria" data-i18n-attr="aria-label" aria-label="Témoignages clients">
     <div class="feedback-marquee">
       <div class="feedback-track">
         <div class="feedback-group">
           <article class="fb-card">
-            <div class="fb-stars" aria-label="5 sur 5 étoiles"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Avant Alfred, je jonglais entre 4 apps et des dizaines de SMS. Maintenant tout est là. J’ai enfin l’impression d’avoir une <span class="fb-hl">vraie équipe</span> derrière moi.</p>
+            <div class="fb-stars" data-i18n="fb_stars_aria" data-i18n-attr="aria-label" aria-label="5 sur 5 étoiles"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+            <p class="fb-text" data-i18n="fb1_text" data-i18n-html="true">Avant Alfred, je jonglais entre 4 apps et des dizaines de SMS. Maintenant tout est là. J’ai enfin l’impression d’avoir une <span class="fb-hl">vraie équipe</span> derrière moi.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">S</div>
               <div class="fb-meta">
-                <div class="fb-name">Sophie Marchand</div>
-                <div class="fb-role">Gestionnaire • 12 appartements à Paris</div>
+                <div class="fb-name" data-i18n="fb1_name">Sophie Marchand</div>
+                <div class="fb-role" data-i18n="fb1_role">Gestionnaire • 12 appartements à Paris</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Le calendrier unifié nous a fait <span class="fb-hl">gagner un temps fou</span> sur les doubles réservations.</p>
+            <p class="fb-text" data-i18n="fb2_text" data-i18n-html="true">Le calendrier unifié nous a fait <span class="fb-hl">gagner un temps fou</span> sur les doubles réservations.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">T</div>
               <div class="fb-meta">
-                <div class="fb-name">Thomas Rivoal</div>
-                <div class="fb-role">Conciergerie • Lyon</div>
+                <div class="fb-name" data-i18n="fb2_name">Thomas Rivoal</div>
+                <div class="fb-role" data-i18n="fb2_role">Conciergerie • Lyon</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">« Les alertes ménage nous ont évité plusieurs oublis. » Interface <span class="fb-hl">vraiment claire</span>.</p>
+            <p class="fb-text" data-i18n="fb3_text" data-i18n-html="true">« Les alertes ménage nous ont évité plusieurs oublis. » Interface <span class="fb-hl">vraiment claire</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">C</div>
               <div class="fb-meta">
-                <div class="fb-name">Claire Dumont</div>
-                <div class="fb-role">12 biens en gestion</div>
+                <div class="fb-name" data-i18n="fb3_name">Claire Dumont</div>
+                <div class="fb-role" data-i18n="fb3_role">12 biens en gestion</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Sync Airbnb &amp; Booking : enfin <span class="fb-hl">une seule source de vérité</span> pour l’équipe.</p>
+            <p class="fb-text" data-i18n="fb4_text" data-i18n-html="true">Sync Airbnb &amp; Booking : enfin <span class="fb-hl">une seule source de vérité</span> pour l’équipe.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">J</div>
               <div class="fb-meta">
-                <div class="fb-name">Julie Bernard</div>
-                <div class="fb-role">CEO • Host &amp; Co</div>
+                <div class="fb-name" data-i18n="fb4_name">Julie Bernard</div>
+                <div class="fb-role" data-i18n="fb4_role">CEO • Host &amp; Co</div>
               </div>
             </div>
           </article>
@@ -1364,40 +1425,40 @@ body.load-screen-active {
         <div class="feedback-group" aria-hidden="true">
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Avant Alfred, je jonglais entre 4 apps et des dizaines de SMS. Maintenant tout est là. J’ai enfin l’impression d’avoir une <span class="fb-hl">vraie équipe</span> derrière moi.</p>
+            <p class="fb-text" data-i18n="fb1_text" data-i18n-html="true">Avant Alfred, je jonglais entre 4 apps et des dizaines de SMS. Maintenant tout est là. J’ai enfin l’impression d’avoir une <span class="fb-hl">vraie équipe</span> derrière moi.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">S</div>
               <div class="fb-meta">
-                <div class="fb-name">Sophie Marchand</div>
-                <div class="fb-role">Gestionnaire • 12 appartements à Paris</div>
+                <div class="fb-name" data-i18n="fb1_name">Sophie Marchand</div>
+                <div class="fb-role" data-i18n="fb1_role">Gestionnaire • 12 appartements à Paris</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Le calendrier unifié nous a fait <span class="fb-hl">gagner un temps fou</span> sur les doubles réservations.</p>
+            <p class="fb-text" data-i18n="fb2_text" data-i18n-html="true">Le calendrier unifié nous a fait <span class="fb-hl">gagner un temps fou</span> sur les doubles réservations.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">T</div>
               <div class="fb-meta">
-                <div class="fb-name">Thomas Rivoal</div>
-                <div class="fb-role">Conciergerie • Lyon</div>
+                <div class="fb-name" data-i18n="fb2_name">Thomas Rivoal</div>
+                <div class="fb-role" data-i18n="fb2_role">Conciergerie • Lyon</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">« Les alertes ménage nous ont évité plusieurs oublis. » Interface <span class="fb-hl">vraiment claire</span>.</p>
+            <p class="fb-text" data-i18n="fb3_text" data-i18n-html="true">« Les alertes ménage nous ont évité plusieurs oublis. » Interface <span class="fb-hl">vraiment claire</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">C</div>
               <div class="fb-meta">
-                <div class="fb-name">Claire Dumont</div>
-                <div class="fb-role">12 biens en gestion</div>
+                <div class="fb-name" data-i18n="fb3_name">Claire Dumont</div>
+                <div class="fb-role" data-i18n="fb3_role">12 biens en gestion</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Sync Airbnb &amp; Booking : enfin <span class="fb-hl">une seule source de vérité</span> pour l’équipe.</p>
+            <p class="fb-text" data-i18n="fb4_text" data-i18n-html="true">Sync Airbnb &amp; Booking : enfin <span class="fb-hl">une seule source de vérité</span> pour l’équipe.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">J</div>
               <div class="fb-meta">
@@ -1414,45 +1475,45 @@ body.load-screen-active {
         <div class="feedback-group">
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Je recommande sans hésiter — <span class="fb-hl">vision instantanée</span> de la journée sur le dashboard.</p>
+            <p class="fb-text" data-i18n="fb5_text" data-i18n-html="true">Je recommande sans hésiter — <span class="fb-hl">vision instantanée</span> de la journée sur le dashboard.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">A</div>
               <div class="fb-meta">
-                <div class="fb-name">Antoine Perrin</div>
-                <div class="fb-role">Directeur • City Keys</div>
+                <div class="fb-name" data-i18n="fb5_name">Antoine Perrin</div>
+                <div class="fb-role" data-i18n="fb5_role">Directeur • City Keys</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Centraliser les réservations, c’était notre cauchemar — <span class="fb-hl">résolu en quelques jours</span>.</p>
+            <p class="fb-text" data-i18n="fb6_text" data-i18n-html="true">Centraliser les réservations, c’était notre cauchemar — <span class="fb-hl">résolu en quelques jours</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">É</div>
               <div class="fb-meta">
-                <div class="fb-name">Émilie Vasseur</div>
-                <div class="fb-role">COO • Lodge France</div>
+                <div class="fb-name" data-i18n="fb6_name">Émilie Vasseur</div>
+                <div class="fb-role" data-i18n="fb6_role">COO • Lodge France</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Un vrai gain de sérénité sur les <span class="fb-hl">départs et le ménage</span>.</p>
+            <p class="fb-text" data-i18n="fb7_text" data-i18n-html="true">Un vrai gain de sérénité sur les <span class="fb-hl">départs et le ménage</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">K</div>
               <div class="fb-meta">
-                <div class="fb-name">Karim Hadad</div>
-                <div class="fb-role">Gestionnaire • Bordeaux</div>
+                <div class="fb-name" data-i18n="fb7_name">Karim Hadad</div>
+                <div class="fb-role" data-i18n="fb7_role">Gestionnaire • Bordeaux</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Produit solide, <span class="fb-hl">mises à jour fréquentes</span> — ça compte pour nous.</p>
+            <p class="fb-text" data-i18n="fb8_text" data-i18n-html="true">Produit solide, <span class="fb-hl">mises à jour fréquentes</span> — ça compte pour nous.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">N</div>
               <div class="fb-meta">
-                <div class="fb-name">Nina Kowalski</div>
-                <div class="fb-role">Fondatrice • BnB Flow</div>
+                <div class="fb-name" data-i18n="fb8_name">Nina Kowalski</div>
+                <div class="fb-role" data-i18n="fb8_role">Fondatrice • BnB Flow</div>
               </div>
             </div>
           </article>
@@ -1460,45 +1521,45 @@ body.load-screen-active {
         <div class="feedback-group" aria-hidden="true">
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Je recommande sans hésiter — <span class="fb-hl">vision instantanée</span> de la journée sur le dashboard.</p>
+            <p class="fb-text" data-i18n="fb5_text" data-i18n-html="true">Je recommande sans hésiter — <span class="fb-hl">vision instantanée</span> de la journée sur le dashboard.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">A</div>
               <div class="fb-meta">
-                <div class="fb-name">Antoine Perrin</div>
-                <div class="fb-role">Directeur • City Keys</div>
+                <div class="fb-name" data-i18n="fb5_name">Antoine Perrin</div>
+                <div class="fb-role" data-i18n="fb5_role">Directeur • City Keys</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Centraliser les réservations, c’était notre cauchemar — <span class="fb-hl">résolu en quelques jours</span>.</p>
+            <p class="fb-text" data-i18n="fb6_text" data-i18n-html="true">Centraliser les réservations, c’était notre cauchemar — <span class="fb-hl">résolu en quelques jours</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">É</div>
               <div class="fb-meta">
-                <div class="fb-name">Émilie Vasseur</div>
-                <div class="fb-role">COO • Lodge France</div>
+                <div class="fb-name" data-i18n="fb6_name">Émilie Vasseur</div>
+                <div class="fb-role" data-i18n="fb6_role">COO • Lodge France</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Un vrai gain de sérénité sur les <span class="fb-hl">départs et le ménage</span>.</p>
+            <p class="fb-text" data-i18n="fb7_text" data-i18n-html="true">Un vrai gain de sérénité sur les <span class="fb-hl">départs et le ménage</span>.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">K</div>
               <div class="fb-meta">
-                <div class="fb-name">Karim Hadad</div>
-                <div class="fb-role">Gestionnaire • Bordeaux</div>
+                <div class="fb-name" data-i18n="fb7_name">Karim Hadad</div>
+                <div class="fb-role" data-i18n="fb7_role">Gestionnaire • Bordeaux</div>
               </div>
             </div>
           </article>
           <article class="fb-card">
             <div class="fb-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="fb-text">Produit solide, <span class="fb-hl">mises à jour fréquentes</span> — ça compte pour nous.</p>
+            <p class="fb-text" data-i18n="fb8_text" data-i18n-html="true">Produit solide, <span class="fb-hl">mises à jour fréquentes</span> — ça compte pour nous.</p>
             <div class="fb-foot">
               <div class="fb-avatar" aria-hidden="true">N</div>
               <div class="fb-meta">
-                <div class="fb-name">Nina Kowalski</div>
-                <div class="fb-role">Fondatrice • BnB Flow</div>
+                <div class="fb-name" data-i18n="fb8_name">Nina Kowalski</div>
+                <div class="fb-role" data-i18n="fb8_role">Fondatrice • BnB Flow</div>
               </div>
             </div>
           </article>
@@ -1511,8 +1572,8 @@ body.load-screen-active {
   <div class="hero-cards-row">
     <div class="hcr-cards">
       <div class="hcr-card">
-        <h3>Dashboard centralisé <span class="hcr-new">Nouveau</span></h3>
-        <p>Toutes vos propriétés, alertes et ménages en un seul endroit.</p>
+        <h3><span data-i18n="hcr1_title">Dashboard centralisé</span> <span class="hcr-new" data-i18n="hcr1_new">Nouveau</span></h3>
+        <p data-i18n="hcr1_desc">Toutes vos propriétés, alertes et ménages en un seul endroit.</p>
         <div class="hcr-preview">
           <div class="card-mock">
             <div class="cm-bar"><div class="cm-dot" style="background:#FF5F57"></div><div class="cm-dot" style="background:#FEBC2E"></div><div class="cm-dot" style="background:#28C840"></div></div>
@@ -1526,8 +1587,8 @@ body.load-screen-active {
         </div>
       </div>
       <div class="hcr-card">
-        <h3>Calendrier unifié</h3>
-        <p>Timeline de toutes vos réservations, synchronisée avec Airbnb et Booking.</p>
+        <h3 data-i18n="hcr2_title">Calendrier unifié</h3>
+        <p data-i18n="hcr2_desc">Timeline de toutes vos réservations, synchronisée avec Airbnb et Booking.</p>
         <div class="hcr-preview">
           <div class="cal-mini">
             <div class="cal-mini-head"></div>
@@ -1541,8 +1602,8 @@ body.load-screen-active {
         </div>
       </div>
       <div class="hcr-card">
-        <h3>Gestion du ménage</h3>
-        <p>Checklists, assignations et suivi en temps réel pour vos équipes.</p>
+        <h3 data-i18n="hcr3_title">Gestion du ménage</h3>
+        <p data-i18n="hcr3_desc">Checklists, assignations et suivi en temps réel pour vos équipes.</p>
         <div class="hcr-preview">
           <div class="blank-mock">
             <div class="blank-plus">✓</div>
@@ -1559,38 +1620,38 @@ body.load-screen-active {
         <div class="cm-dot" style="background:#FF5F57;width:9px;height:9px"></div>
         <div class="cm-dot" style="background:#FEBC2E;width:9px;height:9px"></div>
         <div class="cm-dot" style="background:#28C840;width:9px;height:9px"></div>
-        <span>Alfred · Dashboard</span>
+        <span data-i18n="hdb_chrome">Alfred · Dashboard</span>
       </div>
       <div class="hdb-body">
         <div class="hdb-sidebar">
-          <div class="hdb-brand">𝖠lfred</div>
-          <div class="hdb-item on"><div class="hdb-ico b"></div>Dashboard</div>
-          <div class="hdb-item"><div class="hdb-ico"></div>Properties</div>
-          <div class="hdb-item"><div class="hdb-ico"></div>Calendar</div>
-          <div class="hdb-item"><div class="hdb-ico"></div>Cleaning</div>
-          <div class="hdb-item"><div class="hdb-ico"></div>Messages</div>
+          <div class="hdb-brand" data-i18n="hdb_brand">𝖠lfred</div>
+          <div class="hdb-item on"><div class="hdb-ico b"></div><span data-i18n="hdb_dash">Dashboard</span></div>
+          <div class="hdb-item"><div class="hdb-ico"></div><span data-i18n="hdb_prop">Properties</span></div>
+          <div class="hdb-item"><div class="hdb-ico"></div><span data-i18n="hdb_cal">Calendar</span></div>
+          <div class="hdb-item"><div class="hdb-ico"></div><span data-i18n="hdb_clean">Cleaning</span></div>
+          <div class="hdb-item"><div class="hdb-ico"></div><span data-i18n="hdb_msg">Messages</span></div>
         </div>
         <div class="hdb-main">
-          <div class="hdb-title">Welcome, here's your property portfolio overview.</div>
-          <div class="hdb-sub">3 departures expected · 3 active alerts</div>
+          <div class="hdb-title" data-i18n="hdb_title">Welcome, here's your property portfolio overview.</div>
+          <div class="hdb-sub" data-i18n="hdb_sub">3 departures expected · 3 active alerts</div>
           <div class="hdb-kpis">
-            <div class="hdb-kpi"><div class="hdb-kpi-l">Properties</div><div class="hdb-kpi-v">4</div></div>
-            <div class="hdb-kpi"><div class="hdb-kpi-l">Arrivals</div><div class="hdb-kpi-v b">1</div></div>
-            <div class="hdb-kpi"><div class="hdb-kpi-l">Departures</div><div class="hdb-kpi-v">3</div></div>
-            <div class="hdb-kpi"><div class="hdb-kpi-l">Cleaning</div><div class="hdb-kpi-v">3</div></div>
+            <div class="hdb-kpi"><div class="hdb-kpi-l" data-i18n="hdb_kpi_prop">Properties</div><div class="hdb-kpi-v">4</div></div>
+            <div class="hdb-kpi"><div class="hdb-kpi-l" data-i18n="hdb_kpi_arr">Arrivals</div><div class="hdb-kpi-v b">1</div></div>
+            <div class="hdb-kpi"><div class="hdb-kpi-l" data-i18n="hdb_kpi_dep">Departures</div><div class="hdb-kpi-v">3</div></div>
+            <div class="hdb-kpi"><div class="hdb-kpi-l" data-i18n="hdb_kpi_clean">Cleaning</div><div class="hdb-kpi-v">3</div></div>
           </div>
           <div class="hdb-two">
             <div>
-              <div class="hdb-col-h">Alerts</div>
-              <div class="hdb-alert"><div class="hdb-alert-t">⚠ Late checkout — Apt 402</div><div class="hdb-br">Late</div></div>
-              <div class="hdb-alert"><div class="hdb-alert-t">⚠ Cleaning — Villa Méd.</div><div class="hdb-br">Late</div></div>
-              <div class="hdb-alert"><div class="hdb-alert-t">⚠ Late checkout — Apt 201</div><div class="hdb-br">Late</div></div>
+              <div class="hdb-col-h" data-i18n="hdb_alerts">Alerts</div>
+              <div class="hdb-alert"><div class="hdb-alert-t" data-i18n="hdb_alert1">⚠ Late checkout — Apt 402</div><div class="hdb-br" data-i18n="hdb_late">Late</div></div>
+              <div class="hdb-alert"><div class="hdb-alert-t" data-i18n="hdb_alert2">⚠ Cleaning — Villa Méd.</div><div class="hdb-br" data-i18n="hdb_late">Late</div></div>
+              <div class="hdb-alert"><div class="hdb-alert-t" data-i18n="hdb_alert3">⚠ Late checkout — Apt 201</div><div class="hdb-br" data-i18n="hdb_late">Late</div></div>
             </div>
             <div>
-              <div class="hdb-col-h">Today's movements</div>
-              <div class="hdb-row"><div><div class="hdb-rn">Jean Martin</div><div class="hdb-rp">Studio Marais</div></div><div class="hdb-bg">Confirmed</div></div>
-              <div class="hdb-row"><div><div class="hdb-rn">Marie Dupont</div><div class="hdb-rp">Villa Méd.</div></div><div class="hdb-by">In progress</div></div>
-              <div class="hdb-row"><div><div class="hdb-rn">Pierre Lambert</div><div class="hdb-rp">Apt 201</div></div><div class="hdb-by">In progress</div></div>
+              <div class="hdb-col-h" data-i18n="hdb_movements">Today's movements</div>
+              <div class="hdb-row"><div><div class="hdb-rn">Jean Martin</div><div class="hdb-rp">Studio Marais</div></div><div class="hdb-bg" data-i18n="hdb_conf">Confirmed</div></div>
+              <div class="hdb-row"><div><div class="hdb-rn">Marie Dupont</div><div class="hdb-rp">Villa Méd.</div></div><div class="hdb-by" data-i18n="hdb_prog">In progress</div></div>
+              <div class="hdb-row"><div><div class="hdb-rn">Pierre Lambert</div><div class="hdb-rp">Apt 201</div></div><div class="hdb-by" data-i18n="hdb_prog">In progress</div></div>
             </div>
           </div>
         </div>
@@ -1613,68 +1674,68 @@ body.load-screen-active {
 <!-- FEATURES -->
 <section id="features" class="features">
   <div class="feat-header">
-    <div class="s-eye">Fonctionnalités</div>
-    <h2>Tout ce qu'il faut.<br>Rien de trop.</h2>
-    <p class="s-sub">Une plateforme taillée pour les gestionnaires de locations courte durée, de 1 à 100 biens.</p>
+    <div class="s-eye" data-i18n="feat_eye">Fonctionnalités</div>
+    <h2 data-i18n="feat_h2" data-i18n-html="true">Tout ce qu'il faut.<br>Rien de trop.</h2>
+    <p class="s-sub" data-i18n="feat_sub">Une plateforme taillée pour les gestionnaires de locations courte durée, de 1 à 100 biens.</p>
   </div>
   <div class="feat-grid">
-    <div class="fc"><div class="fc-num">01</div><h3>Dashboard centralisé</h3><p>Toutes vos propriétés en un coup d'œil. Arrivées, départs, alertes et ménages, organisés pour votre journée.</p></div>
-    <div class="fc"><div class="fc-num">02</div><h3>Calendrier unifié</h3><p>Visualisez toutes vos réservations sur une timeline claire. Sync automatique avec Airbnb, Booking & co.</p></div>
-    <div class="fc"><div class="fc-num">03</div><h3>Gestion du ménage</h3><p>Assignez et validez les tâches de nettoyage. Checklists en temps réel pour vos agents de terrain.</p></div>
-    <div class="fc"><div class="fc-num">04</div><h3>Alertes intelligentes</h3><p>Check-out tardif, ménage manquant — Alfred détecte et alerte avant que ça devienne un problème.</p></div>
-    <div class="fc"><div class="fc-num">05</div><h3>Messages & automations</h3><p>Rappels aux voyageurs, notifications aux propriétaires. Configurez une fois, Alfred s'en charge.</p></div>
-    <div class="fc"><div class="fc-num">06</div><h3>Multi-propriétés</h3><p>Studios, villas, résidences entières avec plusieurs unités — tout depuis une seule interface.</p></div>
+    <div class="fc"><div class="fc-num">01</div><h3 data-i18n="fc1_h">Dashboard centralisé</h3><p data-i18n="fc1_p">Toutes vos propriétés en un coup d'œil. Arrivées, départs, alertes et ménages, organisés pour votre journée.</p></div>
+    <div class="fc"><div class="fc-num">02</div><h3 data-i18n="fc2_h">Calendrier unifié</h3><p data-i18n="fc2_p">Visualisez toutes vos réservations sur une timeline claire. Sync automatique avec Airbnb, Booking & co.</p></div>
+    <div class="fc"><div class="fc-num">03</div><h3 data-i18n="fc3_h">Gestion du ménage</h3><p data-i18n="fc3_p">Assignez et validez les tâches de nettoyage. Checklists en temps réel pour vos agents de terrain.</p></div>
+    <div class="fc"><div class="fc-num">04</div><h3 data-i18n="fc4_h">Alertes intelligentes</h3><p data-i18n="fc4_p">Check-out tardif, ménage manquant — Alfred détecte et alerte avant que ça devienne un problème.</p></div>
+    <div class="fc"><div class="fc-num">05</div><h3 data-i18n="fc5_h">Messages & automations</h3><p data-i18n="fc5_p">Rappels aux voyageurs, notifications aux propriétaires. Configurez une fois, Alfred s'en charge.</p></div>
+    <div class="fc"><div class="fc-num">06</div><h3 data-i18n="fc6_h">Multi-propriétés</h3><p data-i18n="fc6_p">Studios, villas, résidences entières avec plusieurs unités — tout depuis une seule interface.</p></div>
   </div>
 </section>
 
 <!-- DARK SPLIT — Calendar -->
 <section class="dark-split">
   <div class="ds-left">
-    <div class="s-eye">Calendrier</div>
-    <h2>Vue d'ensemble en temps réel.</h2>
-    <p class="s-sub">Ne ratez plus jamais un check-in ou un ménage à planifier.</p>
+    <div class="s-eye" data-i18n="ds_eye">Calendrier</div>
+    <h2 data-i18n="ds_h2">Vue d'ensemble en temps réel.</h2>
+    <p class="s-sub" data-i18n="ds_sub">Ne ratez plus jamais un check-in ou un ménage à planifier.</p>
     <div class="ds-items">
-      <div class="ds-item"><div class="ds-ico">📅</div><div><h4>Synchronisation multi-plateformes</h4><p>Airbnb, Booking, direct — tout se centralise automatiquement.</p></div></div>
-      <div class="ds-item"><div class="ds-ico">🔄</div><div><h4>Mise à jour instantanée</h4><p>Chaque nouvelle réservation apparaît en temps réel sur votre timeline.</p></div></div>
-      <div class="ds-item"><div class="ds-ico">⚡</div><div><h4>Détection des conflits</h4><p>Alfred vous alerte si deux réservations se chevauchent.</p></div></div>
+      <div class="ds-item"><div class="ds-ico">📅</div><div><h4 data-i18n="ds_i1_h">Synchronisation multi-plateformes</h4><p data-i18n="ds_i1_p">Airbnb, Booking, direct — tout se centralise automatiquement.</p></div></div>
+      <div class="ds-item"><div class="ds-ico">🔄</div><div><h4 data-i18n="ds_i2_h">Mise à jour instantanée</h4><p data-i18n="ds_i2_p">Chaque nouvelle réservation apparaît en temps réel sur votre timeline.</p></div></div>
+      <div class="ds-item"><div class="ds-ico">⚡</div><div><h4 data-i18n="ds_i3_h">Détection des conflits</h4><p data-i18n="ds_i3_p">Alfred vous alerte si deux réservations se chevauchent.</p></div></div>
     </div>
   </div>
   <div class="ds-right">
     <div class="cal-card">
       <div class="cal-head">
-        <div class="cal-head-t">Calendar · Reservation timeline</div>
-        <div class="cal-head-s">Apr 12 – 18</div>
+        <div class="cal-head-t" data-i18n="cal_head">Calendar · Reservation timeline</div>
+        <div class="cal-head-s" data-i18n="cal_range">Apr 12 – 18</div>
       </div>
       <div class="cal-inner">
         <div class="cal-row">
           <div class="cr-lbl"></div>
-          <div class="cr-head">Sun 12</div>
-          <div class="cr-head">Mon 13</div>
-          <div class="cr-head">Tue 14</div>
-          <div class="cr-head tod">Wed 15</div>
-          <div class="cr-head">Thu 16</div>
-          <div class="cr-head">Fri 17</div>
-          <div class="cr-head">Sat 18</div>
+          <div class="cr-head" data-i18n="cal_d0">Sun 12</div>
+          <div class="cr-head" data-i18n="cal_d1">Mon 13</div>
+          <div class="cr-head" data-i18n="cal_d2">Tue 14</div>
+          <div class="cr-head tod" data-i18n="cal_d3">Wed 15</div>
+          <div class="cr-head" data-i18n="cal_d4">Thu 16</div>
+          <div class="cr-head" data-i18n="cal_d5">Fri 17</div>
+          <div class="cr-head" data-i18n="cal_d6">Sat 18</div>
         </div>
         <div class="cal-row">
-          <div class="cr-lbl">Villa Méd.</div>
+          <div class="cr-lbl" data-i18n="cal_lbl1">Villa Méd.</div>
           <div class="cr-cell" style="grid-column:span 3"><div class="cr-bar bar-o">Marie Dupont</div></div>
           <div class="cr-cell"></div>
           <div class="cr-cell" style="grid-column:span 3"><div class="cr-bar bar-b">Lucas Blanc</div></div>
         </div>
         <div class="cal-row">
-          <div class="cr-lbl">Studio Marais</div>
+          <div class="cr-lbl" data-i18n="cal_lbl2">Studio Marais</div>
           <div class="cr-cell"></div><div class="cr-cell"></div><div class="cr-cell"></div>
           <div class="cr-cell" style="grid-column:span 4"><div class="cr-bar bar-b">Jean Martin</div></div>
         </div>
         <div class="cal-row">
-          <div class="cr-lbl">Apt 201<small>Rés. Les Pins</small></div>
+          <div class="cr-lbl"><span data-i18n="cal_lbl3">Apt 201</span><small data-i18n="cal_lbl3_s">Rés. Les Pins</small></div>
           <div class="cr-cell"></div>
           <div class="cr-cell" style="grid-column:span 3"><div class="cr-bar bar-o">Pierre Lambert</div></div>
           <div class="cr-cell"></div><div class="cr-cell"></div><div class="cr-cell"></div>
         </div>
         <div class="cal-row">
-          <div class="cr-lbl">Apt 402<small>Rés. Les Pins</small></div>
+          <div class="cr-lbl"><span data-i18n="cal_lbl4">Apt 402</span><small data-i18n="cal_lbl3_s">Rés. Les Pins</small></div>
           <div class="cr-cell"></div><div class="cr-cell"></div>
           <div class="cr-cell" style="grid-column:span 2"><div class="cr-bar bar-o">Thomas Petit</div></div>
           <div class="cr-cell"></div><div class="cr-cell"></div><div class="cr-cell"></div>
@@ -1686,13 +1747,13 @@ body.load-screen-active {
 
 <!-- HOW -->
 <section id="how" class="how-section">
-  <div class="s-eye">Comment ça marche</div>
-  <h2>Opérationnel en<br>quelques minutes.</h2>
+  <div class="s-eye" data-i18n="how_eye">Comment ça marche</div>
+  <h2 data-i18n="how_h2" data-i18n-html="true">Opérationnel en<br>quelques minutes.</h2>
   <div class="steps">
-    <div class="step"><div class="s-num">01</div><h3>Ajoutez vos biens</h3><p>Importez depuis Airbnb ou Booking, ou créez manuellement. Quelques secondes suffisent.</p></div>
-    <div class="step"><div class="s-num">02</div><h3>Connectez vos plateformes</h3><p>Synchronisation automatique des réservations. Aucune double saisie.</p></div>
-    <div class="step"><div class="s-num">03</div><h3>Configurez vos règles</h3><p>Checklists ménage, délais d'alerte, messages auto — selon votre façon de travailler.</p></div>
-    <div class="step"><div class="s-num">04</div><h3>Pilotez en temps réel</h3><p>Alfred surveille, alerte et automatise. Vous gardez le contrôle.</p></div>
+    <div class="step"><div class="s-num">01</div><h3 data-i18n="st1_h">Ajoutez vos biens</h3><p data-i18n="st1_p">Importez depuis Airbnb ou Booking, ou créez manuellement. Quelques secondes suffisent.</p></div>
+    <div class="step"><div class="s-num">02</div><h3 data-i18n="st2_h">Connectez vos plateformes</h3><p data-i18n="st2_p">Synchronisation automatique des réservations. Aucune double saisie.</p></div>
+    <div class="step"><div class="s-num">03</div><h3 data-i18n="st3_h">Configurez vos règles</h3><p data-i18n="st3_p">Checklists ménage, délais d'alerte, messages auto — selon votre façon de travailler.</p></div>
+    <div class="step"><div class="s-num">04</div><h3 data-i18n="st4_h">Pilotez en temps réel</h3><p data-i18n="st4_p">Alfred surveille, alerte et automatise. Vous gardez le contrôle.</p></div>
   </div>
 </section>
 
@@ -1700,57 +1761,57 @@ body.load-screen-active {
 <div class="pricing-cta-shell">
 <section id="pricing" class="pricing-section">
   <div class="pr-head">
-    <div class="s-eye">Tarifs</div>
-    <h2>Simple et transparent.</h2>
-    <p class="s-sub">Commencez gratuitement, évoluez à votre rythme.</p>
+    <div class="s-eye" data-i18n="pr_eye">Tarifs</div>
+    <h2 data-i18n="pr_h2">Simple et transparent.</h2>
+    <p class="s-sub" data-i18n="pr_sub">Commencez gratuitement, évoluez à votre rythme.</p>
   </div>
   <div class="pr-cards">
     <div class="pr-card">
-      <div class="pr-plan">Starter</div>
+      <div class="pr-plan" data-i18n="pr_plan1">Starter</div>
       <div class="pr-price">29€</div>
-      <div class="pr-per">/ mois · jusqu'à 3 biens</div>
+      <div class="pr-per" data-i18n="pr_per1">/ mois · jusqu'à 3 biens</div>
       <ul class="pr-feats">
-        <li>Dashboard & calendrier</li>
-        <li>Gestion du ménage</li>
-        <li>Alertes de base</li>
-        <li>1 canal de réservation</li>
+        <li data-i18n="pr_f1_1">Dashboard & calendrier</li>
+        <li data-i18n="pr_f1_2">Gestion du ménage</li>
+        <li data-i18n="pr_f1_3">Alertes de base</li>
+        <li data-i18n="pr_f1_4">1 canal de réservation</li>
       </ul>
-      <button class="btn-pr">Démarrer gratuitement</button>
+      <button class="btn-pr" data-i18n="pr_btn1">Démarrer gratuitement</button>
     </div>
     <div class="pr-card feat">
-      <div class="pr-popular">Populaire</div>
-      <div class="pr-plan">Pro</div>
+      <div class="pr-popular" data-i18n="pr_popular">Populaire</div>
+      <div class="pr-plan" data-i18n="pr_plan2">Pro</div>
       <div class="pr-price">79€</div>
-      <div class="pr-per">/ mois · jusqu'à 15 biens</div>
+      <div class="pr-per" data-i18n="pr_per2">/ mois · jusqu'à 15 biens</div>
       <ul class="pr-feats">
-        <li>Tout Starter inclus</li>
-        <li>Automations & messages</li>
-        <li>Multi-plateformes illimité</li>
-        <li>Support prioritaire</li>
+        <li data-i18n="pr_f2_1">Tout Starter inclus</li>
+        <li data-i18n="pr_f2_2">Automations & messages</li>
+        <li data-i18n="pr_f2_3">Multi-plateformes illimité</li>
+        <li data-i18n="pr_f2_4">Support prioritaire</li>
       </ul>
-      <button class="btn-pr">Démarrer gratuitement</button>
+      <button class="btn-pr" data-i18n="pr_btn1">Démarrer gratuitement</button>
     </div>
     <div class="pr-card">
-      <div class="pr-plan">Agence</div>
-      <div class="pr-price" style="font-size:34px;letter-spacing:-1px;padding-top:8px">Sur devis</div>
-      <div class="pr-per">Biens illimités</div>
+      <div class="pr-plan" data-i18n="pr_plan3">Agence</div>
+      <div class="pr-price" style="font-size:34px;letter-spacing:-1px;padding-top:8px" data-i18n="pr_price_custom">Sur devis</div>
+      <div class="pr-per" data-i18n="pr_per3">Biens illimités</div>
       <ul class="pr-feats">
-        <li>Tout Pro inclus</li>
-        <li>API & webhooks</li>
-        <li>Marque blanche possible</li>
-        <li>Account manager dédié</li>
+        <li data-i18n="pr_f3_1">Tout Pro inclus</li>
+        <li data-i18n="pr_f3_2">API & webhooks</li>
+        <li data-i18n="pr_f3_3">Marque blanche possible</li>
+        <li data-i18n="pr_f3_4">Account manager dédié</li>
       </ul>
-      <button class="btn-pr">Nous contacter</button>
+      <button class="btn-pr" data-i18n="pr_btn2">Nous contacter</button>
     </div>
   </div>
 </section>
 
 <section class="cta">
-  <h2>Prêt à reprendre le contrôle ?</h2>
-  <p>Rejoignez 1 200+ gestionnaires qui pilotent leurs locations avec Alfred.</p>
+  <h2 data-i18n="cta_h2">Prêt à reprendre le contrôle ?</h2>
+  <p data-i18n="cta_p">Rejoignez 1 200+ gestionnaires qui pilotent leurs locations avec Alfred.</p>
   <div class="cta-btns">
-    <button class="btn-cw">Essayer 14 jours gratuits</button>
-    <button class="btn-co">Voir une démo →</button>
+    <button class="btn-cw" data-i18n="cta_b1">Essayer 14 jours gratuits</button>
+    <button class="btn-co" data-i18n="cta_b2">Voir une démo →</button>
   </div>
 </section>
 </div>
@@ -1758,39 +1819,39 @@ body.load-screen-active {
 <!-- FAQ -->
 <section id="faq" class="faq-section" aria-labelledby="faq-title">
   <div class="faq-header">
-    <div class="s-eye">FAQ</div>
-    <h2 id="faq-title">Questions fréquentes</h2>
-    <p class="s-sub">Les réponses aux doutes les plus courants avant de vous lancer.</p>
+    <div class="s-eye" data-i18n="faq_eye">FAQ</div>
+    <h2 id="faq-title" data-i18n="faq_h2">Questions fréquentes</h2>
+    <p class="s-sub" data-i18n="faq_sub">Les réponses aux doutes les plus courants avant de vous lancer.</p>
   </div>
   <div class="faq-list">
     <details class="faq-item">
-      <summary>Puis-je essayer Alfred sans carte bancaire ?</summary>
+      <summary data-i18n="faq_q1">Puis-je essayer Alfred sans carte bancaire ?</summary>
       <div class="faq-a">
-        <p>Oui. L’essai gratuit de 14 jours vous donne accès aux fonctionnalités principales sans engagement. Vous n’êtes facturé qu’à la fin de la période si vous choisissez de continuer.</p>
+        <p data-i18n="faq_a1">Oui. L’essai gratuit de 14 jours vous donne accès aux fonctionnalités principales sans engagement. Vous n’êtes facturé qu’à la fin de la période si vous choisissez de continuer.</p>
       </div>
     </details>
     <details class="faq-item">
-      <summary>Quelles plateformes sont synchronisées ?</summary>
+      <summary data-i18n="faq_q2">Quelles plateformes sont synchronisées ?</summary>
       <div class="faq-a">
-        <p>Alfred centralise les réservations issues d’Airbnb, Booking.com et de vos canaux directs. Le calendrier et les alertes se mettent à jour automatiquement.</p>
+        <p data-i18n="faq_a2">Alfred centralise les réservations issues d’Airbnb, Booking.com et de vos canaux directs. Le calendrier et les alertes se mettent à jour automatiquement.</p>
       </div>
     </details>
     <details class="faq-item">
-      <summary>Mes données et celles de mes voyageurs sont-elles protégées ?</summary>
+      <summary data-i18n="faq_q3">Mes données et celles de mes voyageurs sont-elles protégées ?</summary>
       <div class="faq-a">
-        <p>Les données sont hébergées dans des environnements sécurisés, avec chiffrement des échanges et accès limité aux seuls besoins du service. Vous gardez la maîtrise de vos informations.</p>
+        <p data-i18n="faq_a3">Les données sont hébergées dans des environnements sécurisés, avec chiffrement des échanges et accès limité aux seuls besoins du service. Vous gardez la maîtrise de vos informations.</p>
       </div>
     </details>
     <details class="faq-item">
-      <summary>Puis-je changer de formule ou d’avis plus tard ?</summary>
+      <summary data-i18n="faq_q4">Puis-je changer de formule ou d’avis plus tard ?</summary>
       <div class="faq-a">
-        <p>Vous pouvez passer à une offre supérieure ou réduire votre abonnement à tout moment depuis votre compte. Les changements s’appliquent selon les conditions indiquées à la souscription.</p>
+        <p data-i18n="faq_a4">Vous pouvez passer à une offre supérieure ou réduire votre abonnement à tout moment depuis votre compte. Les changements s’appliquent selon les conditions indiquées à la souscription.</p>
       </div>
     </details>
     <details class="faq-item">
-      <summary>Proposez-vous de l’aide pour équiper mon équipe ?</summary>
+      <summary data-i18n="faq_q5">Proposez-vous de l’aide pour équiper mon équipe ?</summary>
       <div class="faq-a">
-        <p>Les formules Pro et Agence incluent un support prioritaire ou dédié pour la mise en route, la formation de vos équipes et les questions techniques.</p>
+        <p data-i18n="faq_a5">Les formules Pro et Agence incluent un support prioritaire ou dédié pour la mise en route, la formation de vos équipes et les questions techniques.</p>
       </div>
     </details>
   </div>
@@ -1802,13 +1863,13 @@ body.load-screen-active {
     <img class="logo-img" src="assets/logo.svg" alt="Alfred" width="105" height="39" decoding="async">
   </div>
   <div class="f-links">
-    <a href="#">Fonctionnalités</a>
-    <a href="#">Tarifs</a>
-    <a href="#">Blog</a>
-    <a href="#">Contact</a>
-    <a href="#">CGU</a>
+    <a href="#" data-i18n="foot_features">Fonctionnalités</a>
+    <a href="#" data-i18n="foot_pricing">Tarifs</a>
+    <a href="#" data-i18n="foot_blog">Blog</a>
+    <a href="#" data-i18n="foot_contact">Contact</a>
+    <a href="#" data-i18n="foot_terms">CGU</a>
   </div>
-  <div class="f-copy">© 2026 Alfred. Tous droits réservés.</div>
+  <div class="f-copy" data-i18n="foot_copy">© 2026 Alfred. Tous droits réservés.</div>
 </footer>
 
 <script>

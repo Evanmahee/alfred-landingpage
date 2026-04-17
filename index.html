@@ -559,27 +559,62 @@ nav {
   .f-links { flex-wrap: wrap; justify-content: center; gap: 16px 20px; }
 }
 
-/* ─── FEEDBACK — cartes + double marquee sous le hero ─── */
+/* ─── FEEDBACK — cartes + défilement auto (JS) + drag — voir assets/feedback-drag.js ─── */
 .feedback-strip {
   padding: 8px 0 40px;
   background: var(--white);
+  position: relative;
+}
+@media (hover: hover) and (pointer: fine) {
+  .feedback-strip { cursor: none; }
+  .feedback-strip .feedback-marquee { cursor: none; }
 }
 .feedback-marquee {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
   mask-image: linear-gradient(90deg, transparent, #000 48px, #000 calc(100% - 48px), transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 48px, #000 calc(100% - 48px), transparent);
+}
+.feedback-marquee::-webkit-scrollbar { display: none; height: 0; }
+.feedback-marquee.is-dragging {
+  user-select: none;
+  -webkit-user-select: none;
 }
 .feedback-marquee + .feedback-marquee { margin-top: 16px; }
 .feedback-track {
   display: flex;
   width: max-content;
-  animation: fb-marquee 120s linear infinite;
+  animation: none;
 }
-.feedback-marquee--rev .feedback-track { animation-direction: reverse; }
-@keyframes fb-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+#fb-drag-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10050;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Satoshi', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.15s ease;
+}
+#fb-drag-cursor.is-visible {
+  opacity: 1;
 }
 .feedback-group {
   display: flex;
@@ -646,9 +681,6 @@ nav {
 @media (max-width: 640px) {
   .fb-card { padding: 18px 18px 16px; width: min(340px, 92vw); }
   .fb-text { font-size: 14px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .feedback-track { animation: none; }
 }
 
 /* How do you want to start — cards row */
@@ -942,7 +974,30 @@ h2 { font-size: 32px; font-weight: 500; letter-spacing: -1px; line-height: 1.15;
   content: '→'; position: absolute;
   top: 14px; right: 2px; color: var(--grey-2); font-size: 16px;
 }
-.s-num { font-size: 52px; font-weight: 800; color: var(--blue); opacity: 0.12; letter-spacing: -3px; line-height: 1; margin-bottom: 18px; }
+.s-num {
+  position: relative;
+  display: inline-block;
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  line-height: 1;
+  margin-bottom: 18px;
+}
+.s-num__base {
+  color: var(--blue);
+  opacity: 0.12;
+}
+.s-num__fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--blue);
+  opacity: 1;
+  pointer-events: none;
+  --fill: 0;
+  clip-path: inset(calc((1 - var(--fill)) * 100%) 0 0 0);
+  -webkit-clip-path: inset(calc((1 - var(--fill)) * 100%) 0 0 0);
+}
 .step h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; margin-bottom: 8px; }
 .step p { font-size: 13px; color: var(--grey-4); line-height: 1.7; }
 
@@ -1087,8 +1142,11 @@ h2 { font-size: 32px; font-weight: 500; letter-spacing: -1px; line-height: 1.15;
 
 /* ─── CTA ─── */
 .cta {
-  background: var(--blue); padding: 120px 32px; text-align: center;
-  position: relative; overflow: hidden;
+  background: var(--blue);
+  padding: 120px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
   border-radius: 24px;
   margin: 0 0 60px;
   width: 100%;
@@ -1750,10 +1808,10 @@ body.load-screen-active {
   <div class="s-eye" data-i18n="how_eye">Comment ça marche</div>
   <h2 data-i18n="how_h2" data-i18n-html="true">Opérationnel en<br>quelques minutes.</h2>
   <div class="steps">
-    <div class="step"><div class="s-num">01</div><h3 data-i18n="st1_h">Ajoutez vos biens</h3><p data-i18n="st1_p">Importez depuis Airbnb ou Booking, ou créez manuellement. Quelques secondes suffisent.</p></div>
-    <div class="step"><div class="s-num">02</div><h3 data-i18n="st2_h">Connectez vos plateformes</h3><p data-i18n="st2_p">Synchronisation automatique des réservations. Aucune double saisie.</p></div>
-    <div class="step"><div class="s-num">03</div><h3 data-i18n="st3_h">Configurez vos règles</h3><p data-i18n="st3_p">Checklists ménage, délais d'alerte, messages auto — selon votre façon de travailler.</p></div>
-    <div class="step"><div class="s-num">04</div><h3 data-i18n="st4_h">Pilotez en temps réel</h3><p data-i18n="st4_p">Alfred surveille, alerte et automatise. Vous gardez le contrôle.</p></div>
+    <div class="step"><div class="s-num" aria-hidden="true"><span class="s-num__base">01</span><span class="s-num__fill">01</span></div><h3 data-i18n="st1_h">Ajoutez vos biens</h3><p data-i18n="st1_p">Importez depuis Airbnb ou Booking, ou créez manuellement. Quelques secondes suffisent.</p></div>
+    <div class="step"><div class="s-num" aria-hidden="true"><span class="s-num__base">02</span><span class="s-num__fill">02</span></div><h3 data-i18n="st2_h">Connectez vos plateformes</h3><p data-i18n="st2_p">Synchronisation automatique des réservations. Aucune double saisie.</p></div>
+    <div class="step"><div class="s-num" aria-hidden="true"><span class="s-num__base">03</span><span class="s-num__fill">03</span></div><h3 data-i18n="st3_h">Configurez vos règles</h3><p data-i18n="st3_p">Checklists ménage, délais d'alerte, messages auto — selon votre façon de travailler.</p></div>
+    <div class="step"><div class="s-num" aria-hidden="true"><span class="s-num__base">04</span><span class="s-num__fill">04</span></div><h3 data-i18n="st4_h">Pilotez en temps réel</h3><p data-i18n="st4_p">Alfred surveille, alerte et automatise. Vous gardez le contrôle.</p></div>
   </div>
 </section>
 
@@ -1776,7 +1834,7 @@ body.load-screen-active {
         <li data-i18n="pr_f1_3">Alertes de base</li>
         <li data-i18n="pr_f1_4">1 canal de réservation</li>
       </ul>
-      <button class="btn-pr" data-i18n="pr_btn1">Démarrer gratuitement</button>
+      <button class="btn-pr" data-i18n="pr_btn1">Commencer gratuitement</button>
     </div>
     <div class="pr-card feat">
       <div class="pr-popular" data-i18n="pr_popular">Populaire</div>
@@ -1789,7 +1847,7 @@ body.load-screen-active {
         <li data-i18n="pr_f2_3">Multi-plateformes illimité</li>
         <li data-i18n="pr_f2_4">Support prioritaire</li>
       </ul>
-      <button class="btn-pr" data-i18n="pr_btn1">Démarrer gratuitement</button>
+      <button class="btn-pr" data-i18n="pr_btn1">Commencer gratuitement</button>
     </div>
     <div class="pr-card">
       <div class="pr-plan" data-i18n="pr_plan3">Agence</div>
@@ -1810,7 +1868,7 @@ body.load-screen-active {
   <h2 data-i18n="cta_h2">Prêt à reprendre le contrôle ?</h2>
   <p data-i18n="cta_p">Rejoignez 1 200+ gestionnaires qui pilotent leurs locations avec Alfred.</p>
   <div class="cta-btns">
-    <button class="btn-cw" data-i18n="cta_b1">Essayer 14 jours gratuits</button>
+    <button class="btn-cw" data-i18n="cta_b1">Essayer 3 jours gratuits</button>
     <button class="btn-co" data-i18n="cta_b2">Voir une démo →</button>
   </div>
 </section>
@@ -1827,7 +1885,7 @@ body.load-screen-active {
     <details class="faq-item">
       <summary data-i18n="faq_q1">Puis-je essayer Alfred sans carte bancaire ?</summary>
       <div class="faq-a">
-        <p data-i18n="faq_a1">Oui. L’essai gratuit de 14 jours vous donne accès aux fonctionnalités principales sans engagement. Vous n’êtes facturé qu’à la fin de la période si vous choisissez de continuer.</p>
+        <p data-i18n="faq_a1">Oui. L’essai gratuit de 3 jours vous donne accès aux fonctionnalités principales sans engagement. Vous n’êtes facturé qu’à la fin de la période si vous choisissez de continuer.</p>
       </div>
     </details>
     <details class="faq-item">
@@ -1872,6 +1930,10 @@ body.load-screen-active {
   <div class="f-copy" data-i18n="foot_copy">© 2026 Alfred. Tous droits réservés.</div>
 </footer>
 
+<div id="fb-drag-cursor" data-i18n="feedback_drag" aria-hidden="true">Glisser</div>
+
+<script src="assets/how-steps-scroll.js" defer></script>
+<script src="assets/feedback-drag.js" defer></script>
 <script>
 (function () {
   var el = document.getElementById('load-screen');
